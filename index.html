@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Le Clavier Français — Cahier de dactylo</title>
+<title>Le Clavier Français — Dactylo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
@@ -294,30 +294,30 @@
   .dot.now { background: var(--accent-gold); }
 
   /* ---------- Keyboard ---------- */
-  .keyboard-wrap { margin-top: 18px; }
+  .keyboard-wrap { margin-top: 0; margin-bottom: 20px; }
   .keyboard {
-    display: flex; flex-direction: column; gap: 8px;
+    display: flex; flex-direction: column; gap: 6px;
     background: var(--paper-edge); border: 1px solid var(--panel-border);
-    border-radius: 12px; padding: 16px; max-width: 780px;
+    border-radius: 12px; padding: 12px; max-width: 660px;
   }
-  .krow { display:flex; gap: 8px; justify-content: center; }
+  .krow { display:flex; gap: 6px; justify-content: center; }
   .key {
     background: var(--key-face); border: 1px solid var(--key-border);
     color: var(--key-text);
-    border-radius: 8px; height: 54px; min-width: 48px;
+    border-radius: 7px; height: 42px; min-width: 38px;
     display:flex; align-items:center; justify-content:center;
-    font-size: 1.05rem; font-weight: 500; position: relative;
+    font-size: .9rem; font-weight: 500; position: relative;
     box-shadow: 0 2px 0 rgba(0,0,0,.09);
   }
-  .key.w15 { min-width: 68px; }
-  .key.w20 { min-width: 86px; font-size: .82rem; }
-  .key.wspace { flex: 1; max-width: 380px; }
+  .key.w15 { min-width: 54px; }
+  .key.w20 { min-width: 68px; font-size: .74rem; }
+  .key.wspace { flex: 1; max-width: 320px; }
   .key.home::after {
-    content:""; position:absolute; bottom: 7px; left:50%; transform: translateX(-50%);
-    width: 16px; height: 3px; border-radius: 3px; background: var(--home-ring); opacity:.85;
+    content:""; position:absolute; bottom: 6px; left:50%; transform: translateX(-50%);
+    width: 13px; height: 3px; border-radius: 3px; background: var(--home-ring); opacity:.85;
   }
   .key[data-key="f"]::after, .key[data-key="j"]::after {
-    width: 20px; height: 4px; opacity: 1;
+    width: 16px; height: 3px; opacity: 1;
   }
   .key.active {
     outline: 3px solid var(--pencil-green); outline-offset: 1px;
@@ -634,7 +634,7 @@ function renderSidebar(){
   sidebarEl.innerHTML = '';
   const brand = document.createElement('div');
   brand.innerHTML = `<div class="brand"><span class="flag">🇫🇷</span><h1>Le Clavier</h1></div>
-    <div class="brand-sub">Cahier de dactylo — apprends à taper sans regarder</div>`;
+    <div class="brand-sub">Apprends à taper sans regarder</div>`;
   sidebarEl.appendChild(brand);
 
   const sb = document.createElement('div');
@@ -669,7 +669,7 @@ function renderSidebar(){
 
   const homeItem = document.createElement('div');
   homeItem.className = 'nav-item home-link' + (route.view==='home' ? ' active' : '');
-  homeItem.textContent = '📖 Mon cahier';
+  homeItem.textContent = '📖 Accueil';
   homeItem.addEventListener('click', ()=>{ route = {view:'home'}; render(); });
   sidebarEl.appendChild(homeItem);
 
@@ -739,7 +739,7 @@ function renderHome(){
 
   pageEl.innerHTML = `
     <div class="dash-head">
-      <h2>Bienvenue dans ton cahier</h2>
+      <h2>Bienvenue !</h2>
       <p>Choisis une leçon à gauche. Garde les doigts sur la rangée de départ — <strong>A S D F</strong> pour la main gauche,
       <strong>J K L ;</strong> pour la main droite — et essaie de taper sans regarder le clavier.</p>
     </div>
@@ -814,13 +814,27 @@ function renderLesson(lessonId){
   }
 
   pageEl.innerHTML = `
-    <button class="back-link" id="backBtn">← retour au cahier</button>
+    <button class="back-link" id="backBtn">← retour à l'accueil</button>
     <div class="lesson-head">
       <div>
         <h2>${lesson.icon} ${lesson.title}</h2>
         <div class="lesson-meta">${lesson.niveauLabel} · ${lesson.items.length} mots / phrases</div>
       </div>
     </div>
+
+    <div class="home-callout">
+      <span class="icon">🖐️</span>
+      <div>
+        <strong>Position de départ :</strong> avant de commencer, pose tes <strong>index</strong> sur les
+        petites bosses des touches <span class="key-badge">F</span> et <span class="key-badge">J</span> —
+        tu dois pouvoir les sentir sans regarder. Les autres doigts se posent juste à côté :
+        <span class="key-badge">A</span><span class="key-badge">S</span><span class="key-badge">D</span>
+        pour la main gauche, <span class="key-badge">K</span><span class="key-badge">L</span><span class="key-badge">;</span>
+        pour la main droite. Reviens toujours à cette position de départ entre deux mots !
+      </div>
+    </div>
+
+    <div class="keyboard-wrap" id="kbWrap"></div>
 
     <div class="live-stats">
       <div class="s"><div class="v" id="statWpm">0</div><div class="k">mots / min</div></div>
@@ -847,20 +861,6 @@ function renderLesson(lessonId){
       <label class="toggle-row"><input type="checkbox" id="hintsToggle" checked> afficher les touches</label>
       <label class="toggle-row"><input type="checkbox" id="strictToggle"> exiger les accents</label>
     </div>
-
-    <div class="home-callout">
-      <span class="icon">🖐️</span>
-      <div>
-        <strong>Position de départ :</strong> avant de commencer, pose tes <strong>index</strong> sur les
-        petites bosses des touches <span class="key-badge">F</span> et <span class="key-badge">J</span> —
-        tu dois pouvoir les sentir sans regarder. Les autres doigts se posent juste à côté :
-        <span class="key-badge">A</span><span class="key-badge">S</span><span class="key-badge">D</span>
-        pour la main gauche, <span class="key-badge">K</span><span class="key-badge">L</span><span class="key-badge">;</span>
-        pour la main droite. Reviens toujours à cette position de départ entre deux mots !
-      </div>
-    </div>
-
-    <div class="keyboard-wrap" id="kbWrap"></div>
   `;
 
   document.getElementById('backBtn').addEventListener('click', ()=>{ route={view:'home'}; render(); });
